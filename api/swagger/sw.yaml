@@ -1,0 +1,19 @@
+openapi: 3.0.0
+info:
+  title: 'API''s da plataforma IT.Health'
+  contact:
+    email: williansbuonny@gmail.com
+  version: 1.0-0.0
+paths:
+  /usuario/credencial:
+    put:
+      summary: 'Atualiza a senha do usuario'
+      operationId: 'App\Controller\Api\UsuarioController::atualizaSenha'
+      responses:
+        '200':
+          description: 'A list with products'
+        default:
+          description: 'an "unexpected" error'
+components:
+  schemas:
+    UsuarioController: {  }

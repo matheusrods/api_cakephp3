@@ -1,0 +1,7 @@
+################ APP LYN ################
+0 9 * * * sh /home/sistemas/api_ithealth/api_ithealth/src/Command/notifica_exames_a_vencer.sh>/tmp/api_ithealth_notifica_exames_a_vencer.log 2>&1
+0 6,8,10,12,14,16,18 * * * sh /home/sistemas/api_ithealth/api_ithealth/src/Command/notifica_atestados.sh>/tmp/api_ithealth_notifica_atestados.log 2>&1
+* * * * * sh /home/sistemas/api_ithealth/api_ithealth/src/Command/notifica_anexar_imagem.sh>/tmp/api_ithealth_notifica_anexar_imagem.log 2>&1
+0 9 * * * sh /home/sistemas/api_ithealth/api_ithealth/src/Command/notifica_exames_agendados.sh>/tmp/api_ithealth_notifica_exames_agendados.log 2>&1
+* * * * * sh /home/sistemas/api_ithealth/api_ithealth/src/Command/notifica_avalie_a_clinica.sh>/tmp/api_ithealth_notifica_avalie_a_clinica.log 2>&1
+* * * * * sh /home/sistemas/api_ithealth/api_ithealth/src/Command/notifica_medicacao.sh>/tmp/api_ithealth_notifica_medicacao.log 2>&1

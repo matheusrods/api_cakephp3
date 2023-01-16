@@ -1,0 +1,3028 @@
+openapi: 3.0.1
+info:
+  title: Swagger NINA
+  description: Documentação da API que será utilizada no aplicativo NINA.
+  version: 1.0.0
+servers:
+  - url: 'http://tstapi.rhhealth.com.br/api/'
+paths:
+  /auth:
+    post:
+      tags:
+        - usuario
+      operationId: postAuth
+      description: Autenticamos e retornamos o token para as outras operações e codigo_usuario.
+      security: []
+      requestBody:
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                apelido:
+                  type: string
+                  example: login_do_usuario
+                senha:
+                  type: string
+                  example: senha_do_usuario
+              required:
+                - apelido
+                - senha
+      responses:
+        200:
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: number
+                    example: 200
+                  result:
+                    type: object
+                    properties:
+                      data:
+                        type: object
+                        properties:
+                          token:
+                            type: string
+                            example: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0ZXN0ZV9iZXJuamFtaW4iLCJleHAiOjE1NzAwNDM0MTh9.M3TbWzDOEKD2Gs6ICrVWkabFY0Rza7n9W7CFlzdeOgc
+                          codigo_usuario:
+                            type: integer
+                            example: 72273
+        401:
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Unauthorized'
+        404:
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFound'
+  /usuario:
+    post:
+      operationId: postUsuario
+      tags:
+        - usuario
+      description: Quando cadastrar um usuário e retornar sucesso, iremos logar e retornar o codigo do usuario e o token. Quando ocorrer um erro irá ter o indice error, e uma mensagem.
+      security: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                nome:
+                  type: string
+                  example: SERGIO LEANDRO LIMA SALLES
+                login:
+                  type: string
+                  example: 07329099708
+                senha:
+                  type: string
+                  example: '123456'
+                email:
+                  type: string
+                  example: teste@teste.com.br
+                cpf:
+                  type: string
+                  example: 07329099708
+                data_nascimento:
+                  type: string
+                  example: '1976-07-05'
+                sexo:
+                  type: string
+                  example: M
+                telefone:
+                  type: string
+                  example: '8138612194'
+                celular:
+                  type: string
+                  example: '81999556553'
+                apelido_sistema:
+                  type: string
+                  example: Serginho
+                cliente:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      codigo_cliente:
+                        type: string
+                        example: '71758'
+                      codigo_confirmacao:
+                        type: string
+                        example: '123456'
+                notificacao:
+                  type: integer
+                  example: 1
+                token_push:
+                  type: string
+                  example: 'xxxxxxxxxxxxxxxxx'
+                codigo_sistema:
+                  type: integer
+                  example: 1
+        required: true
+      responses:
+        200:
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: number
+                    example: 200
+                  result:
+                    type: object
+                    properties:
+                      data:
+                        type: object
+                        properties:
+                          token:
+                            type: string
+                            example: >-
+                              eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0ZXN0ZV9iZXJuamFtaW4iLCJleHAiOjE1NzAwNDM0MTh9.M3TbWzDOEKD2Gs6ICrVWkabFY0Rza7n9W7CFlzdeOgc
+                          codigo_usuario:
+                            type: integer
+                            example: 72273
+        400:
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: number
+                    example: 200
+                  result:
+                    type: object
+                    properties:
+                      error:
+                        type: object
+                        properties:
+                          message:
+                            type: array
+                            items:
+                              type: object
+                              properties:
+                                cpf:
+                                  type: string
+                                  example: CPF já cadastrado
+        401:
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Unauthorized'
+        404:
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFound'
+  /usuario/{codigo_usuario}:
+    put:
+      operationId: putUsuario
+      tags:
+        - usuario
+      description: Na chamada não pode alterar o login e senha. Caso envie dados no indice cliente irá atualizar para o novo cliente.
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: codigo_usuario
+          schema:
+            type: integer
+          required: true
+          description: ID do usuário ou CPF
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                nome:
+                  type: string
+                  example: SERGIO LEANDRO LIMA SALLES
+                email:
+                  type: string
+                  example: teste@teste.com.br
+                cpf:
+                  type: string
+                  example: 07329099708
+                data_nascimento:
+                  type: string
+                  example: '1976-07-05'
+                sexo:
+                  type: string
+                  example: M
+                telefone:
+                  type: string
+                  example: '8138612194'
+                celular:
+                  type: string
+                  example: '81999556553'
+                apelido_sistema:
+                  type: string
+                  example: Serginho
+                cliente:
+                  type: array
+                  items:
+                    type: object
+                  example: []
+        required: true
+      responses:
+        200:
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: number
+                    example: 200
+                  result:
+                    type: object
+                    properties:
+                      data:
+                        type: string
+                        example: Registro atualizado com sucesso!
+        400:
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequest'
+        401:
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Unauthorized'
+        404:
+          description: Not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: number
+                    example: 404
+                  result:
+                    type: object
+                    properties:
+                      data:
+                        type: string
+                        example: Not Found
+    get:
+      operationId: getUsuario
+      tags:
+        - usuario
+      description: Codigo de usuario para teste 72247
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: codigo_usuario
+          schema:
+            type: string
+          required: true
+          description: ID do usuário
+      responses:
+        200:
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: number
+                    example: 200
+                  result:
+                    type: object
+                    properties:
+                      data:
+                        type: object
+                        properties:
+                          codigo_usuario:
+                            type: integer
+                            example: 134155
+                          nome:
+                            type: string
+                            example: 'SERGIO LEANDRO LIMA SALLES'
+                          email:
+                            type: string
+                            example: 'teste@teste.com.br'
+                          celular:
+                            type: string
+                            example: '81999556553'
+                          telefone:
+                            type: string
+                            example: '8138612194'
+                          cpf:
+                            type: string
+                            example: '07329099708'
+                          senha:
+                            type: string
+                            example: '123456'
+                          Cliente:
+                            type: object
+                            properties:
+                              nome_fantasia:
+                                type: string
+                                example: 'SIEMENS LTDA - SAO PAULO - Anhanguera - 44013159000116'
+                              razao_social:
+                                type: string
+                                example: 'SIEMENS LTDA'
+                          ContatoEmergencia:
+                            type: object
+                            properties:
+                              nome:
+                                type: string
+                                example: 'Will'
+                              telefone:
+                                type: string
+                                example: '(81) 3861-2194'
+                              celular:
+                                type: string
+                                example: '(89) 98130-2356'
+                              grau_parentesco:
+                                type: string
+                                example: ''
+                              email:
+                                type: string
+                                example: ''
+        400:
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequest'
+        401:
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Unauthorized'
+        404:
+          description: Not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: number
+                    example: 404
+                  result:
+                    type: object
+                    properties:
+                      data:
+                        type: string
+                        example: Not Found
+  /usuario/cliente/{cpf}:
+    get:
+      operationId: getUsuarioCliente
+      tags:
+        - usuario
+      description: Retorna o codigo do cliente e o nome do mesmo.
+      security: []
+      parameters:
+        - in: path
+          name: cpf
+          schema:
+            type: string
+          required: true
+          description: CPF do usuário
+      responses:
+        200:
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: number
+                    example: 200
+                  result:
+                    type: object
+                    properties:
+                      data:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            codigo_cliente:
+                              type: string
+                              example: '71758'
+                            nome_cliente:
+                              type: string
+                              example: SIEMENS LTDA - SAO PAULO - Anhanguera - 44013159000116
+                            flag_vinclulado:
+                              type: integer
+                              example: 1
+                            codigo_usuario:
+                              type: string
+                              example: '72247'
+        400:
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequest'
+        401:
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Unauthorized'
+        404:
+          description: Not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: number
+                    example: 404
+                  result:
+                    type: object
+                    properties:
+                      data:
+                        type: string
+                        example: Not Found
+  /validar/vinculo:
+    post:
+      operationId: postValidarVinculo
+      tags:
+        - usuario
+      security: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                cpf:
+                  type: string
+                  example: '07329099708'
+                codigo_cliente:
+                  type: string
+                  example: '71758'
+                codigo_confirmacao:
+                  type: string
+                  example: '123456'
+                codigo_usuario:
+                  type: string
+                  example: ''
+        required: true
+      responses:
+        200:
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: number
+                    example: 200
+                  result:
+                    type: object
+                    properties:
+                      data:
+                        type: string
+                        example: Cliente vinculado com sucesso!
+        400:
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: number
+                    example: 200
+                  result:
+                    type: object
+                    properties:
+                      error:
+                        type: string
+                        example: Não existe cliente relacionado para este cpf!
+        401:
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Unauthorized'
+        404:
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFound'
+  /foto/{codigo_usuario}:
+    get:
+      operationId: getFotoUsuario
+      tags:
+        - usuario
+      description: 'Testar por enquanto com o codigo de usuario: 72247'
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: codigo_usuario
+          schema:
+            type: string
+          required: true
+          description: ID do usuário
+      responses:
+        200:
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: number
+                    example: 200
+                  result:
+                    type: object
+                    properties:
+                      data:
+                        type: string
+                        example: http://api.buonny.com.br/file-server/nina/2019/10/05/DE568818-D29A-E6B2-7C07-32494A419529.jpeg
+        400:
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequest'
+        401:
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Unauthorized'
+        404:
+          description: Not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: number
+                    example: 404
+                  result:
+                    type: object
+                    properties:
+                      data:
+                        type: string
+                        example: Not Found
+    put:
+      operationId: putFotoUsuario
+      tags:
+        - usuario
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: codigo_usuario
+          schema:
+            type: integer
+          required: true
+          description: ID do usuário
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                foto:
+                  type: string
+                  example: imagem_em_base64
+        required: true
+      responses:
+        200:
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: number
+                    example: 200
+                  result:
+                    type: object
+                    properties:
+                      data:
+                        type: string
+                        example: Registro atualizado com sucesso!
+        400:
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequest'
+        401:
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Unauthorized'
+        404:
+          description: Not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: number
+                    example: 404
+                  result:
+                    type: object
+                    properties:
+                      data:
+                        type: string
+                        example: Not Found
+  /consultas/detalhe/{codigo_item_pedido_exame}:
+    get:
+      operationId: getDetalheConsulta
+      tags:
+        - consulta
+      description: Para teste usar o codigo 279526 para retorno de um detalhe da consulta
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: codigo_item_pedido_exame
+          schema:
+            type: string
+          required: true
+          description: ID de exame
+      responses:
+        200:
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: number
+                    example: 200
+                  result:
+                    type: object
+                    properties:
+                      data:
+                        type: object
+                        properties:
+                          codigo_pedido_exame:
+                            type: integer
+                            example: 134155
+                          codigo_exame:
+                            type: integer
+                            example: 52
+                          exame:
+                            type: string
+                            example: '*ASO - EXAME CLÍNICO'
+                          nome_fantasia_solicitante:
+                            type: string
+                            example: >-
+                              SIEMENS LTDA - Rio de Janeiro - Ilha do Fundão -
+                              44013159000469
+                          razao_social_solicitante:
+                            type: string
+                            example: SIEMENS LTDA
+                          tipo_exame:
+                            type: string
+                            example: Exame periódico
+                          codigo_fornecedor:
+                            type: integer
+                            example: 8090
+                          nome_credenciado:
+                            type: string
+                            example: ANTIGO PRESTADOR
+                          telefone:
+                            type: string
+                            example: null
+                          email:
+                            type: string
+                            example: null
+                          endereco:
+                            type: string
+                            example: >-
+                              AVENIDA JULES RIMET,102   - JARDIM LEONOR - SÃO
+                              PAULO - SP
+                          data_agendamento:
+                            type: string
+                            example: null
+                          hora_agendamento:
+                            type: string
+                            example: null
+                          data_agendamento_itens:
+                            type: string
+                            example: null
+                          de_atendimento_credenciado:
+                            type: string
+                            example: null
+                          ate_atendimento_credenciado:
+                            type: string
+                            example: null
+                          dias_semana_credenciado:
+                            type: string
+                            example: null
+                          data_realizacao_exames:
+                            type: string
+                            example: null
+                          data_resultado:
+                            type: string
+                            example: '2015-08-03'
+                            format: date
+                          data_baixa:
+                            type: string
+                            example: '2019-05-16 19:53:10.000'
+                            format: date-time
+        400:
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequest'
+        401:
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Unauthorized'
+        404:
+          description: Not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: number
+                    example: 404
+                  result:
+                    type: object
+                    properties:
+                      data:
+                        type: string
+                        example: Not Found
+  /consultas/historico/{codigo_usuario}:
+    get:
+      operationId: getHistoricoConsulta
+      tags:
+        - consulta
+      description: Para testar o endpoint usar o codigo de usuario 72247
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: codigo_usuario
+          schema:
+            type: string
+          required: true
+          description: ID do usuário
+      responses:
+        200:
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: number
+                    example: 200
+                  result:
+                    type: object
+                    properties:
+                      data:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            codigo_pedido_exame:
+                              type: integer
+                              example: 134155
+                            codigo_item_pedido_exame:
+                              type: integer
+                              example: 279526
+                            codigo_exame:
+                              type: integer
+                              example: 52
+                            exame:
+                              type: string
+                              example: '*ASO - EXAME CLÍNICO'
+                            nome_fantasia_solicitante:
+                              type: string
+                              example: >-
+                                SIEMENS LTDA - Rio de Janeiro - Ilha do Fundão -
+                                44013159000469
+                            razao_social_solicitante:
+                              type: string
+                              example: SIEMENS LTDA
+                            tipo_exame:
+                              type: string
+                              example: Exame periódico
+                            resultado:
+                              type: string
+                              example: ''
+                            codigo_fornecedor:
+                              type: integer
+                              example: 8090
+                            nome_credenciado:
+                              type: string
+                              example: ANTIGO PRESTADOR
+                            telefone:
+                              type: string
+                              example: null
+                            email:
+                              type: string
+                              example: null
+                            endereco:
+                              type: string
+                              example: >-
+                                AVENIDA JULES RIMET,102   - JARDIM LEONOR - SÃO
+                                PAULO - SP
+                            data_agendamento:
+                              type: string
+                              example: null
+                            hora_agendamento:
+                              type: string
+                              example: null
+                            data_agendamento_itens:
+                              type: string
+                              example: null
+                            data_realizacao_exames:
+                              type: string
+                              example: null
+                            data_resultado:
+                              type: string
+                              example: '2015-08-03'
+                              format: date
+                            data_baixa:
+                              type: string
+                              example: '2019-05-16 19:53:10.000'
+                              format: date-time
+        400:
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequest'
+        401:
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Unauthorized'
+        404:
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFound'
+  /consultas/agendadas/{codigo_usuario}:
+    get:
+      operationId: getAgendaConsulta
+      tags:
+        - consulta
+      description: Para testar o endpoint usar o codigo de usuario 72247
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: codigo_usuario
+          schema:
+            type: string
+          required: true
+          description: ID do usuário
+      responses:
+        200:
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: number
+                    example: 200
+                  result:
+                    type: object
+                    properties:
+                      data:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            codigo_pedido_exame:
+                              type: integer
+                              example: 134155
+                            codigo_item_pedido_exame:
+                              type: integer
+                              example: 279526
+                            codigo_exame:
+                              type: integer
+                              example: 52
+                            exame:
+                              type: string
+                              example: '*ASO - EXAME CLÍNICO'
+                            nome_fantasia_solicitante:
+                              type: string
+                              example: >-
+                                SIEMENS LTDA - Rio de Janeiro - Ilha do Fundão -
+                                44013159000469
+                            razao_social_solicitante:
+                              type: string
+                              example: SIEMENS LTDA
+                            tipo_exame:
+                              type: string
+                              example: Exame periódico
+                            resultado:
+                              type: string
+                              example: ''
+                            codigo_fornecedor:
+                              type: integer
+                              example: 8090
+                            nome_credenciado:
+                              type: string
+                              example: ANTIGO PRESTADOR
+                            telefone:
+                              type: string
+                              example: null
+                            email:
+                              type: string
+                              example: null
+                            endereco:
+                              type: string
+                              example: >-
+                                AVENIDA JULES RIMET,102   - JARDIM LEONOR - SÃO
+                                PAULO - SP
+                            data_agendamento:
+                              type: string
+                              example: null
+                            hora_agendamento:
+                              type: string
+                              example: null
+                            data_agendamento_itens:
+                              type: string
+                              example: null
+                            data_realizacao_exames:
+                              type: string
+                              example: null
+                            data_resultado:
+                              type: string
+                              example: '2015-08-03'
+                              format: date
+                            data_baixa:
+                              type: string
+                              example: '2019-05-16 19:53:10.000'
+                              format: date-time
+        400:
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequest'
+        401:
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Unauthorized'
+        404:
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFound'
+  /questionarios/{codigo_usuario}:
+    get:
+      operationId: getQuestionarios
+      tags:
+        - questionarios
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: codigo_usuario
+          schema:
+            type: string
+          required: true
+          description: ID do usuário
+      responses:
+        200:
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: number
+                    example: 200
+                  result:
+                    type: object
+                    properties:
+                      data:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            codigo:
+                              type: integer
+                              example: 4
+                            descricao:
+                              type: string
+                              example: Câncer de Próstata
+                            aplicacao_sexo:
+                              type: string
+                              example: M
+                            background:
+                              type: string
+                              example: >-
+                                /nina/2018/12/28/16E6D8EC-778B-ED45-1347-FD5C5F934E76.png
+                            icone:
+                              type: string
+                              example: >-
+                                /nina/2018/12/13/D7125134-0888-0710-4030-BD93788BDD26.png
+                            numero_de_perguntas:
+                              type: integer
+                              example: 7
+                            numero_respostas:
+                              type: integer
+                              example: 0
+                            pontuacao_questionario:
+                              type: integer
+                              example: null
+                            risco:
+                              type: string
+                              example: BAIXO RISCO
+        400:
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequest'
+        401:
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Unauthorized'
+        404:
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFound'
+  /questionarios/peguntas/{codigo_usuario}/{codigo_questionario}:
+    get:
+      operationId: getQuestionarioPerguntas
+      tags:
+        - questionarios
+      description: Retorna indicadores e seus históricos
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: codigo_usuario
+          schema:
+            type: integer
+          required: true
+          description: ID do usuário
+        - in: path
+          name: codigo_questionario
+          schema:
+            type: integer
+          required: true
+          description: ID do Questionário
+      responses:
+        200:
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: number
+                    example: 200
+                  result:
+                    type: object
+                    properties:
+                      data:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            codigo_pergunta:
+                              type: number
+                              example: 4
+                            label_pergunta:
+                              type: string
+                              example: Qual seu sexo?
+                            codigo_proxima_pergunta:
+                              type: integer
+                              example: 12
+                            respotas:
+                              type: array
+                              items:
+                                type: object
+                                properties:
+                                  codigo:
+                                    type: integer
+                                    example: 9
+                                  label:
+                                    type: string
+                                    example: Feminino
+        401:
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Unauthorized'
+        404:
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFound'
+  /questionarios/responde/{codigo_usuario}/{codigo_questionario}:
+    post:
+      operationId: postQuestionarioResposta
+      tags:
+        - questionarios
+      description: Retorna indicadores e seus históricos
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: codigo_usuario
+          schema:
+            type: integer
+          required: true
+          description: ID do usuário
+        - in: path
+          name: codigo_questionario
+          schema:
+            type: integer
+          required: true
+          description: ID do Questionário
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                questionario:
+                  type: integer
+                  example: 1
+                respotas:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      codigo_pergunta:
+                        type: integer
+                        example: 9
+                      codigo_resposta:
+                        type: integer
+                        example: 50
+              required:
+                - codigo_pergunta
+                - codigo_resposta
+      responses:
+        200:
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: number
+                    example: 200
+                  result:
+                    type: object
+                    properties:
+                      data:
+                        type: object
+                        properties:
+                          pontos:
+                            type: integer
+                            example: 25
+                          descricao:
+                            type: string
+                            example: 'ALTO RISCO'
+                          finalizado:
+                            type: boolean
+                            example: true
+                          textos:
+                            type: array
+                            items:
+                              type: object
+                              properties:
+                                titulo:
+                                  type: string
+                                  example: 'Seus fatores de Risco'
+                                conteudo:
+                                  type: array
+                                  items:
+                                    type: object
+                                    properties:
+                                      subtitulo:
+                                        type: string
+                                        example: 'Fator 1'
+                                      subconteudo:
+                                        type: string
+                                        example: 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been'
+        401:
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Unauthorized'
+        404:
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: number
+                    example: 404
+                  result:
+                    type: object
+                    properties:
+                      error:
+                        type: object
+                        properties:
+                          message:
+                            type: array
+                            items:
+                              type: object
+                              properties:
+                                Error:
+                                  type: string
+                                  example: Payload não encontrado!
+  /home/{codigo_usuario}:
+    get:
+      operationId: getHome
+      tags:
+        - home
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: codigo_usuario
+          schema:
+            type: string
+          required: true
+          description: ID do usuário
+      responses:
+        200:
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: number
+                    example: 200
+                  result:
+                    type: object
+                    properties:
+                      data:
+                        type: object
+                        properties:
+                          porcent_quest:
+                            type: string
+                            example: 14%
+                          proximas_consultas:
+                            type: array
+                            items:
+                              type: object
+                            example: []
+                          atestados_ativos:
+                            type: array
+                            items:
+                              type: object
+                              properties:
+                                codigo_atestados:
+                                  type: integer
+                                  example: 15765
+                                data_validade:
+                                  type: string
+                                  example: '019-09-30T00:00:00+00:00'
+                                  format: date-time
+                                periodo:
+                                  type: string
+                                  example: '6'
+                                motivo:
+                                  type: string
+                                  example: >-
+                                    CONSULTA MÉDICA - Licença remunerada -
+                                    Liberalidade da empresa ou Acordo/Convenção
+                                    Coletiva de Trabalho
+                          atestados_historico:
+                            type: array
+                            items:
+                              type: object
+                              properties:
+                                codigo_atestados:
+                                  type: integer
+                                  example: 15765
+                                data_validade:
+                                  type: string
+                                  example: '019-09-30T00:00:00+00:00'
+                                  format: date-time
+                                periodo:
+                                  type: string
+                                  example: '6'
+                                motivo:
+                                  type: string
+                                  example: >-
+                                    CONSULTA MÉDICA - Licença remunerada -
+                                    Liberalidade da empresa ou Acordo/Convenção
+                                    Coletiva de Trabalho
+        400:
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequest'
+        401:
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Unauthorized'
+        404:
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFound'
+  /atestados/ativos/{codigo_usuario}:
+    get:
+      operationId: getAtestadosAtivos
+      tags:
+        - atestados
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: codigo_usuario
+          schema:
+            type: string
+          required: true
+          description: ID do usuário
+      responses:
+        200:
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: number
+                    example: 200
+                  result:
+                    type: object
+                    properties:
+                      data:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            codigo_atestados:
+                              type: integer
+                              example: 15765
+                            data_validade:
+                              type: string
+                              example: '019-09-30T00:00:00+00:00'
+                              format: date-time
+                            periodo:
+                              type: string
+                              example: '6'
+                            motivo:
+                              type: string
+                              example: >-
+                                CONSULTA MÉDICA - Licença remunerada -
+                                Liberalidade da empresa ou Acordo/Convenção
+                                Coletiva de Trabalho
+        400:
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequest'
+        401:
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Unauthorized'
+        404:
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFound'
+  /atestados/historico/{codigo_usuario}:
+    get:
+      operationId: getAtestadosHistoricos
+      tags:
+        - atestados
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: codigo_usuario
+          schema:
+            type: string
+          required: true
+          description: ID do usuário
+      responses:
+        200:
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: number
+                    example: 200
+                  result:
+                    type: object
+                    properties:
+                      data:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            codigo_atestados:
+                              type: integer
+                              example: 15765
+                            data_validade:
+                              type: string
+                              example: '019-09-30T00:00:00+00:00'
+                              format: date-time
+                            periodo:
+                              type: string
+                              example: '6'
+                            motivo:
+                              type: string
+                              example: >-
+                                CONSULTA MÉDICA - Licença remunerada -
+                                Liberalidade da empresa ou Acordo/Convenção
+                                Coletiva de Trabalho
+        400:
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequest'
+        401:
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Unauthorized'
+        404:
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFound'
+  /contato/emergencia/{codigo_usuario}:
+    put:
+      operationId: putContatoEmergencia
+      tags:
+        - home
+      description: Atualiza campos contato de emergência
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: codigo_usuario
+          schema:
+            type: integer
+          required: true
+          description: ID do usuário
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                nome:
+                  type: string
+                  example: Roberto Carlos
+                telefone:
+                  type: string
+                  example: (51) 3035-0055
+                celular:
+                  type: string
+                  example: (51) 982090555
+                grau_parentesco:
+                  type: string
+                  example: Pai
+                email:
+                  type: string
+                  example: contatoemergencia@teste.com.br
+      responses:
+        200:
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: number
+                    example: 200
+                  result:
+                    type: object
+                    properties:
+                      data:
+                        type: string
+                        example: Contato de Emergência cadastrado com sucesso
+        401:
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Unauthorized'
+        404:
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: number
+                    example: 404
+                  result:
+                    type: object
+                    properties:
+                      error:
+                        type: object
+                        properties:
+                          message:
+                            type: array
+                            items:
+                              type: object
+                              properties:
+                                Error:
+                                  type: string
+                                  example: Não foi possível cadastrar contato de emergência
+    post:
+      operationId: postContatoEmergencia
+      tags:
+        - home
+      description: Cadastra um contato de emergência para um usuário
+      security: []
+      parameters:
+        - in: path
+          name: codigo_usuario
+          schema:
+            type: integer
+          required: true
+          description: ID do usuário
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                nome:
+                  type: string
+                  example: Roberto Carlos
+                telefone:
+                  type: string
+                  example: (51) 3035-0055
+                celular:
+                  type: string
+                  example: (51) 982090555
+                grau_parentesco:
+                  type: string
+                  example: Pai
+                email:
+                  type: string
+                  example: contatoemergencia@teste.com.br
+      responses:
+        200:
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: number
+                    example: 200
+                  result:
+                    type: object
+                    properties:
+                      data:
+                        type: string
+                        example: Contato de Emergência cadastrado com sucesso
+        401:
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Unauthorized'
+        404:
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: number
+                    example: 404
+                  result:
+                    type: object
+                    properties:
+                      error:
+                        type: object
+                        properties:
+                          message:
+                            type: array
+                            items:
+                              type: object
+                              properties:
+                                Error:
+                                  type: string
+                                  example: >-
+                                    Não foi possível cadastrar contato de
+                                    emergência
+  /token/push/{codigo_usuario}:
+    put:
+      operationId: putTokenPush
+      tags:
+        - push
+      description: 'Atualiza registro de token '
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: codigo_usuario
+          schema:
+            type: integer
+          required: true
+          description: ID do usuário
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                token_push:
+                  type: string
+                  example: xxxxxxy
+                codigo_sistema:
+                  type: string
+                  example: 1
+      responses:
+        200:
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: number
+                    example: 200
+                  result:
+                    type: object
+                    properties:
+                      data:
+                        type: object
+                        properties:
+                          data:
+                            type: string
+                            example: Registro Atualizado com sucesso!
+        401:
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Unauthorized'
+        404:
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: number
+                    example: 404
+                  result:
+                    type: object
+                    properties:
+                      error:
+                        type: object
+                        properties:
+                          message:
+                            type: array
+                            items:
+                              type: object
+                              properties:
+                                Error:
+                                  type: string
+                                  example: Não foi possível atualizar o token!
+  /notificacao/{codigo_usuario}:
+    get:
+      operationId: getNotificacao
+      tags:
+        - push
+      description: Busca notificações
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: codigo_usuario
+          schema:
+            type: integer
+          required: true
+          description: ID do usuário
+      responses:
+        200:
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: number
+                    example: 200
+                  result:
+                    type: object
+                    properties:
+                      data:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            codigo:
+                              type: integer
+                              example: 5
+                            titulo:
+                              type: string
+                              example: Novo Exame Agendado
+                            mensagem:
+                              type: string
+                              example: >-
+                                Sua empresa Siemens agendou um exame para você
+                                no dia 01/01/2019
+        401:
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Unauthorized'
+        404:
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: number
+                    example: 404
+                  result:
+                    type: object
+                    properties:
+                      error:
+                        type: object
+                        properties:
+                          message:
+                            type: array
+                            items:
+                              type: object
+                              properties:
+                                Error:
+                                  type: string
+                                  example: Não foi pegar as mensagens!
+  /indicadores/{codigo_usuario}:
+    get:
+      operationId: getIndicadores
+      tags:
+        - indicadores
+      description: >-
+        Retorna indicadores e seus históricos // caso codigo for vazio null
+        campos não são editáveis
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: codigo_usuario
+          schema:
+            type: integer
+          required: true
+          description: ID do usuário
+      responses:
+        200:
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: number
+                    example: 200
+                  result:
+                    type: object
+                    properties:
+                      data:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            pressao_arterial:
+                              type: array
+                              items:
+                                type: object
+                                properties:
+                                  codigo:
+                                    type: number
+                                    example: 12
+                                  pressao_arterial_diastolica:
+                                    type: number
+                                    example: 80
+                                  pressao_arterial_sistolica:
+                                    type: number
+                                    example: 120
+                                  classificacao:
+                                    type: string
+                                    example: Normal
+                                  codigo_usuario:
+                                    type: number
+                                    example: 72247
+                                  data_inclusao:
+                                    type: string
+                                    example: '2019-10-02T16:02:35.000Z'
+                                  historico:
+                                    type: object
+                                    properties:
+                                      grafico_pad:
+                                        type: array
+                                        items:
+                                          type: object
+                                          properties:
+                                            timestamp:
+                                              type: number
+                                              example: 1570021355000
+                                            valor:
+                                              type: number
+                                              example: 80
+                                      grafico_pas:
+                                        type: array
+                                        items:
+                                          type: object
+                                          properties:
+                                            timestamp:
+                                              type: number
+                                              example: 1570021355000
+                                            valor:
+                                              type: number
+                                              example: 80
+                            colesterol:
+                              type: object
+                              properties:
+                                codigo:
+                                  type: number
+                                  example: 6
+                                total:
+                                  type: number
+                                  example: 200
+                                hdl:
+                                  type: number
+                                  example: 10
+                                ldl:
+                                  type: number
+                                  example: 10
+                                triglicerideos:
+                                  type: number
+                                  example: 150
+                                classificacao:
+                                  type: string
+                                  example: limítrofe
+                                codigo_usuario:
+                                  type: number
+                                  example: 72247
+                                data_inclusao:
+                                  type: string
+                                  example: '2019-10-02T16:53:12.000Z'
+                                historico:
+                                  type: array
+                                  items:
+                                    type: object
+                                    properties:
+                                      timestamp:
+                                        type: number
+                                        example: 1570024392000
+                                      valor:
+                                        type: number
+                                        example: 200
+                            glicose:
+                              type: object
+                              properties:
+                                codigo:
+                                  type: number
+                                  example: 7
+                                glicose:
+                                  type: number
+                                  example: 180
+                                hemoglobina_glicada:
+                                  type: number
+                                  example: 200
+                                classificacao:
+                                  type: string
+                                  example: Normal
+                                codigo_usuario:
+                                  type: number
+                                  example: 72247
+                                data_inclusao:
+                                  type: string
+                                  example: '2019-10-02T16:53:12.000Z'
+                                historico:
+                                  type: array
+                                  items:
+                                    type: object
+                                    properties:
+                                      timestamp:
+                                        type: number
+                                        example: 1570024392000
+                                      valor:
+                                        type: number
+                                        example: 200
+                            abdominal:
+                              type: string
+                              example: null
+                            imc:
+                              type: object
+                              properties:
+                                codigo:
+                                  type: number
+                                  example: 7
+                                altura:
+                                  type: number
+                                  example: 200
+                                peso:
+                                  type: number
+                                  example: 104
+                                resultado:
+                                  type: number
+                                  example: 26
+                                codigo_usuario:
+                                  type: number
+                                  example: 72247
+                                data_inclusao:
+                                  type: string
+                                  example: '2019-10-02T16:53:12.000Z'
+                                codigo_cor:
+                                  type: number
+                                  example: 3
+                                historico:
+                                  type: object
+                                  properties:
+                                    imc:
+                                      type: array
+                                      items:
+                                        properties:
+                                          timestamp:
+                                            type: number
+                                            example: 1570027023000
+                                          valor:
+                                            type: number
+                                            example: 26
+                                          tick_imc:
+                                            type: number
+                                            example: 1
+                                          titulo_imc:
+                                            type: string
+                                            example: Índice de Massa Corporal
+                                          sufixo_imc:
+                                            type: string
+                                            example: null
+                                    altura:
+                                      type: array
+                                      items:
+                                        properties:
+                                          timestamp:
+                                            type: number
+                                            example: 1570027023000
+                                          valor:
+                                            type: number
+                                            example: 200
+                                          tick_imc:
+                                            type: number
+                                            example: 5
+                                          titulo_imc:
+                                            type: string
+                                            example: Índice de Massa Corporal
+                                          sufixo_imc:
+                                            type: string
+                                            example: cm
+                                    peso:
+                                      type: array
+                                      items:
+                                        properties:
+                                          timestamp:
+                                            type: number
+                                            example: 1570027023000
+                                          valor:
+                                            type: number
+                                            example: 78.9
+                                          tick_imc:
+                                            type: number
+                                            example: 2
+                                          titulo_imc:
+                                            type: string
+                                            example: Peso
+                                          sufixo_imc:
+                                            type: string
+                                            example: kg
+        401:
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Unauthorized'
+        404:
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: number
+                    example: 404
+                  result:
+                    type: object
+                    properties:
+                      error:
+                        type: object
+                        properties:
+                          message:
+                            type: array
+                            items:
+                              type: object
+                              properties:
+                                Error:
+                                  type: string
+                                  example: Não foi pegar os indicadores!
+    post:
+      operationId: postIndicadores
+      tags:
+        - indicadores
+      security: []
+      parameters:
+        - in: path
+          name: codigo_usuario
+          schema:
+            type: integer
+          required: true
+          description: ID do usuário
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                id:
+                  type: string
+                  example: 'imc'
+                  description: 'Valores possíveis: imc, pressao_arterial, colesterol, glicose, abdominal.'
+                valor:
+                  type: object
+                  properties:
+                    altura:
+                      type: integer
+                      example: 200
+                    peso:
+                      type: integer
+                      example: 104
+                  description: 'Valores dependem do que vem no campo id. <br> imc - altura e peso; <br>pressao_arterial - pressao_arterial_diastolica e pressao_arterial_sistolica; <br> colesterol - hdl, ldl, triglicerideos e total; <br> glicose - glicose e hemoglobina_glicada; <br> abdominal - circ_abdom e circ_quadril;'
+      responses:
+        200:
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: number
+                    example: 200
+                  result:
+                    type: object
+                    properties:
+                      data:
+                        type: string
+                        example: Dados salvo com sucesso!
+        400:
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequest'
+        401:
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Unauthorized'
+        404:
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFound'
+  /cid/{search}:
+    get:
+      operationId: getCid
+      tags:
+        - Atestados
+      description: >-
+        Retorna CID
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: search
+          schema:
+            type: string
+          required: true
+          description: string a ser buscada
+      responses:
+        200:
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: number
+                    example: 200
+                  result:
+                    type: object
+                    properties:
+                      data:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            codigo:
+                              type: integer
+                              example: 1 
+                            descricao: 
+                              type: string
+                              example: A00 Colera
+                            codigo_usuario_inclusao: 
+                              type: integer
+                              example: 61891
+                            data_inclusao:  
+                              type: string
+                              example: 2016-10-05 14:05:13
+                            codigo_usuario_alteracao:
+                              type: string
+                              example: null
+                            data_alteracao:
+                              type: string
+                              example: null
+                            ativo: 
+                              type: integer
+                              example: 1
+                            codigo_cid10: 
+                              type: string
+                              example: A00
+        401:
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Unauthorized'
+        404:
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFound'
+  /profissional/{codigo_usuario}:
+    get:
+      operationId: getProfissional
+      tags:
+        - Atestados
+      description: >-
+        Retorna os profissionais para um usuário especifico
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: codigo_usuario
+          schema:
+            type: integer
+          required: true
+          description: ID do usuário
+      responses:
+        200:
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: number
+                    example: 200
+                  result:
+                    type: object
+                    properties:
+                      data:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            codigo: 
+                              type: integer
+                              example: 10810
+                            nome:
+                              type: string
+                              example:  Aldo Felipe Pinto,
+                            numero_conselho:
+                              type: integer
+                              example:  181553
+                            conselho_uf:
+                              type: string
+                              example:  SP
+                            descricao:
+                              type: string
+                              example:  CRM
+        401:
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Unauthorized'
+        404:
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFound'
+  /motivo/afastamento:
+    get:
+      operationId: getMotivoAfastamento
+      tags:
+        - Atestados
+      description: >-
+        Retorna os profissionais para um usuário especifico
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: codigo_usuario
+          schema:
+            type: integer
+          required: true
+          description: ID do usuário
+      responses:
+        200:
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: number
+                    example: 200
+                  result:
+                    type: object
+                    properties:
+                      data:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            codigo: 
+                              type: integer
+                              example: 27
+                            descricao:
+                              type: string
+                              example:  ALISTAMENTO MILITAR
+        401:
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Unauthorized'
+        404:
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFound'
+  /atestados/{codigo_usuario}:
+    post:
+      operationId: postAtestados
+      tags:
+        - Atestados
+      description: >-
+        Insere um novo atestado
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: codigo_usuario
+          schema:
+            type: integer
+          required: true
+          description: ID do usuário
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                profissional:
+                  type: object
+                  properties:
+                    codigo_medico:
+                      type: string
+                      example: 17969
+                    numero_conselho:
+                      type: string
+                      example: 58150
+                    uf_conselho:
+                      type: string
+                      example: MG
+                    nome:
+                      type: string
+                      example: Adriana de brito
+                periodo:
+                  type: object
+                  properties:
+                    afastamento_em_horas:
+                      type: boolean
+                      example: true
+                    data:
+                      type: string
+                      example: 12/09/2019
+                    range: 
+                      type: object
+                      properties:
+                        de:
+                          type: string 
+                          example: 13:00
+                        ate:
+                          type: string 
+                          example: 17:00
+                        em_horas:
+                          type: string
+                          example: 4:00 
+                motivo:
+                  type: object
+                  properties:
+                    medico:
+                      type: integer
+                      example: 1 
+                    codigo_motivo_licenca:
+                      type: integer
+                      example: 1 
+                    codigo_motivo_esocial:
+                      type: integer
+                      example: 1 
+                    descricao:
+                      type: string
+                      example: 01 - Acidente/Doença do trabalho
+                cid10:
+                  type: object
+                  properties:
+                    codigo:
+                      type: integer
+                      example: 1899
+                    descricao:
+                      type: string
+                      example: D77 Outr transt sangue e org hematop doenc COP
+                    sigla:
+                      type: string
+                      example: D77
+                foto_atestado:
+                  type: object
+                  properties:
+                    imagem_base64:
+                      type: string
+                      example: iVBORw0KGgoAAAANSUhEUgAAAToAAAFaCAYAAACOtpEGAAAKw2lDQ1B
+      responses:
+        200:
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: number
+                    example: 200
+                  result:
+                    type: object
+                    properties:
+                      data:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            codigo_atestado: 
+                              type: integer
+                              example: 15833
+        401:
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Unauthorized'
+        404:
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: number
+                    example: 404
+                  result:
+                    type: object
+                    properties:
+                      error:
+                        type: object
+                        properties:
+                          message:
+                            type: array
+                            items:
+                              type: object
+                              properties:
+                                Error:
+                                  type: string
+                                  example: Código médico não encontrado
+  /agendamentos/{codigo_cliente}:
+    get:
+      operationId: getAgendamentos
+      tags:
+        - Agendamento
+      description: retorna agendamentos
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: codigo_cliente
+          schema:
+            type: integer
+          required: true
+          description: ID do cliente
+      responses:
+        200:
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status: 
+                    type: integer
+                    format: int32
+                    example: 200
+                  result: 
+                    type: object
+                    properties:
+                      status: 
+                        type: integer
+                        format: int32
+                        example: 200
+                      result: 
+                        type: object
+                        properties: 
+                          data: 
+                            type: object
+                            properties: 
+                              agendamento_detalhe: 
+                                type: object
+                                properties: 
+                                  data: 
+                                    type: string
+                                    example: 2020-02-04 1300
+                                  numero_pedido: 
+                                    type: integer
+                                    format: int32
+                                    example: 143389
+                                  solicitante: 
+                                    type: string
+                                    example: SIEMENS LTDA - Rio de Janeiro - Ilha do Fundão - 44013159000469
+                                  Empresa: 
+                                    type: object
+                                    properties: 
+                                      razao_social: 
+                                        type: string
+                                        example: SIEMENS LTDA
+                                      nome_Fantasia: 
+                                        type: string
+                                        example: SIEMENS LTDA - Rio de Janeiro - Ilha do Fundão - 44013159000469
+                                      cnpj: 
+                                        type: string
+                                        example: 44013159000469
+                                  seus_dados: 
+                                    type: object
+                                    properties: 
+                                      cpf: 
+                                        type: string
+                                        example: 07329099708
+                                      data_nascimento: 
+                                        type: string
+                                        format: date
+                                        example: 1976-07-05
+                                      idade: 
+                                        type: string
+                                        example: 43
+                                      setor: 
+                                        type: string
+                                        example: 75100113-VENDAS-551.0004
+                                      cargo: 
+                                        type: string
+                                        example: ENGENHEIRO VENDAS PL - 12445
+                                  sobre_Exame: 
+                                    type: object
+                                    properties: 
+                                      medico_reponsavel: 
+                                        type: string
+                                        format: nullable
+                                      grade_exames: 
+                                        type: string
+                                        format: nullable
+                                      preparo_exame: 
+                                        type: string
+                                        format: nullable
+                                  local_Agendamento: 
+                                    type: object
+                                    properties: 
+                                      lat: 
+                                        type: string
+                                        example: -22.907556599999999
+                                      long: 
+                                        type: string
+                                        example: -43.175644200000001
+                                      endereco: 
+                                        type: string
+                                        example: Rua México 168  8 º ANDAR - Centro - Rio de Janeiro - RJ
+                                      avalicao: 
+                                        type: string
+                                        example: 0
+                                      total_avaliacoes: 
+                                        type: string
+                                        example: 0
+                                      telefone_clinica: 
+                                        type: string
+                                        example: (21) 25334421
+                                      email_clinica: 
+                                        type: string
+                                        example: teste@teste.com
+                                      horario_Funcionamento: 
+                                        type: array
+                                        items: 
+                                          type: object
+                                          properties: 
+                                            dia_semana: 
+                                              type: string
+                                              example: seg
+                                            horario_inicio: 
+                                              type: integer
+                                              format: int32
+                                              example: 800
+                                            horario_fim: 
+                                              type: integer
+                                              format: int32
+                                              example: 1530
+                                      imagens: 
+                                        type: array
+                                        items: 
+                                          type: object
+                                          properties: 
+                                            ordem: 
+                                              type: string
+                                              example: 
+                                            imagem: 
+                                              type: string
+                                              example:                       
+        401:
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Unauthorized'
+        404:
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFound'
+  /agendamentos/detalhe/{codigo_id_agendamento}:
+    get:
+      operationId: getAgendamentoDetalhe
+      tags:
+        - Agendamento
+      description: retorna agendamentos
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: codigo_id_agendamento
+          schema:
+            type: integer
+          required: true
+          description: ID do agendamento
+      responses:
+        200:
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status: 
+                    type: integer
+                    format: int32
+                    example: 200
+                  result: 
+                    type: object
+                    properties: 
+                      data: 
+                        type: object
+                        properties: 
+                          ProximosAgendamentos: 
+                            type: array
+                            items: 
+                              type: object
+                              properties: 
+                                codigo_pedido_exame: 
+                                  type: integer
+                                  format: int32
+                                  example: 143389
+                                id_agendamento: 
+                                  type: string
+                                  example: 306063
+                                codigo_exame: 
+                                  type: string
+                                  example: 130
+                                exame: 
+                                  type: string
+                                  example: AUDIOMETRIA OCUPACIONAL OU DE SELEÇÃO
+                                nome_fantasia_solicitante: 
+                                  type: string
+                                  example: SIEMENS LTDA - Rio de Janeiro - Ilha do Fundão - 44013159000469
+                                nome_cliente: 
+                                  type: string
+                                  example: SIEMENS LTDA
+                                tipo_agendamento: 
+                                  type: string
+                                  example: Exame periódico
+                                resultado: 
+                                  type: string
+                                  example: 
+                                codigo_fornecedor: 
+                                  type: string
+                                  example: 8118
+                                nome_credenciado: 
+                                  type: string
+                                  example: ITALAB MEDICINA E SEGURANÇA DO TRABALHO
+                                telefone: 
+                                  type: string
+                                  example: (21) 25334421
+                                email: 
+                                  type: string
+                                  example: teste@teste.com
+                                local_agendamento: 
+                                  type: string
+                                  example: Rua México 168  8 º ANDAR - Centro - Rio de Janeiro - RJ
+                                data_agendamento: 
+                                  type: string
+                                  format: nullable
+                                hora_agendamento: 
+                                  type: string
+                                  format: nullable
+                                data_agendamento_itens: 
+                                  type: string
+                                  format: nullable
+                                data_realizacao_exames: 
+                                  type: string
+                                  format: nullable
+                                data_resultado: 
+                                  type: string
+                                  format: nullable
+                                data_baixa: 
+                                  type: string
+                                  format: nullable
+                                data: 
+                                  type: string
+                                  format: nullable
+                          HistoricoAgendamentos: 
+                            type: array
+                            items: 
+                              type: object
+                              properties: 
+                                codigo_pedido_exame: 
+                                  type: integer
+                                  format: int32
+                                  example: 134155
+                                id_agendamento: 
+                                  type: string
+                                  example: 279526
+                                codigo_exame: 
+                                  type: string
+                                  example: 52
+                                exame: 
+                                  type: string
+                                  example: ASO - EXAME CLÍNICO
+                                nome_fantasia_solicitante: 
+                                  type: string
+                                  example: SIEMENS LTDA - Rio de Janeiro - Ilha do Fundão - 44013159000469
+                                nome_cliente: 
+                                  type: string
+                                  example: SIEMENS LTDA
+                                tipo_agendamento: 
+                                  type: string
+                                  example: Exame periódico
+                                resultado: 
+                                  type: string
+                                  example: 
+                                codigo_fornecedor: 
+                                  type: string
+                                  example: 8090
+                                nome_credenciado: 
+                                  type: string
+                                  example: ANTIGO PRESTADOR
+                                telefone: 
+                                  type: string
+                                  format: nullable
+                                email: 
+                                  type: string
+                                  format: nullable
+                                local_agendamento: 
+                                  type: string
+                                  example: AVENIDA JULES RIMET102   - JARDIM LEONOR - SÃO PAULO - SP
+                                data_agendamento: 
+                                  type: string
+                                  format: nullable
+                                hora_agendamento: 
+                                  type: string
+                                  format: nullable
+                                data_agendamento_itens: 
+                                  type: string
+                                  format: nullable
+                                data_realizacao_exames: 
+                                  type: string
+                                  format: nullable
+                                data_resultado: 
+                                  type: string
+                                  format: date
+                                  example: 2015-08-03
+                                data_baixa: 
+                                  type: string
+                                  example: 2019-05-16 19:53:10.000
+                                data: 
+                                  type: string
+                                  format: nullable
+                          PodeAgendar: 
+                            type: boolean
+                  
+        401:
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Unauthorized'
+        404:
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFound'
+  /criar/agendamento/{codigo_usuario}:
+    get:
+      operationId: getAgendamentoDetalhe
+      tags:
+        - Agendamento
+      description: retorna agendamentos
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: codigo_id_agendamento
+          schema:
+            type: integer
+          required: true
+          description: ID do agendamento
+      responses:
+        200:
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status: 
+                    type: integer
+                    format: int32
+                    example: 200
+                  result: 
+                    type: object
+                    properties: 
+                      data: 
+                        type: object
+                        properties: 
+                          cliente: 
+                            type: array
+                            items: 
+                              type: object
+                              properties: 
+                                codigo_cliente: 
+                                  type: integer
+                                  format: int32
+                                  example: 79
+                                nome_cliente: 
+                                  type: string
+                                  example: RH HEALTH - Saúde
+                                exames_disponiveis: 
+                                  type: array
+                                  items: 
+                                    type: object
+                                    properties: 
+                                      codigo_solicitacao_exame: 
+                                        type: integer
+                                        format: int32
+                                        example: 1
+                                      descricao: 
+                                        type: string
+                                        example: Periódico
+                                      exames_necessarios: 
+                                        type: array
+                                        items: 
+                                          type: object
+                                          properties: 
+                                            codigo_exame: 
+                                              type: string
+                                              example: 52
+                                            exame: 
+                                              type: string
+                                              example: ASO - EXAME CLÍNICO
+        401:
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Unauthorized'
+        404:
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFound'
+  /consultas/pontuais/{codigo_usuario}/{codigo_cliente}:
+    get:
+      operationId: getConsultasPontuais
+      tags:
+        - Agendamento
+      description: retorna consultas pontuais
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: codigo_usuario
+          schema:
+            type: integer
+          required: true
+          description: ID do usuario
+        - in: path
+          name: codigo_cliente
+          schema:
+            type: integer
+          required: true
+          description: ID do cliente
+      responses:
+        200:
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status: 
+                    type: integer
+                    format: int32
+                    example: 200
+                  result: 
+                    type: object
+                    properties: 
+                      data: 
+                        type: object
+                        properties: 
+                          consulta_pontual: 
+                            type: array
+                            items: 
+                              type: object
+                              properties: 
+                                id: 
+                                  type: integer
+                                  format: int32
+                                  example: 126
+                                descricao: 
+                                  type: string
+                                  example: GRUPO SANGUINEO E FATOR RH
+        401:
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Unauthorized'
+        404:
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFound'
+components:
+  schemas:
+    BadRequest:
+      type: object
+      properties:
+        statusCode:
+          type: integer
+          example: 400
+        error:
+          type: string
+          example: Bad Request
+        message:
+          type: string
+          example: '''CAMPO'' must be a string'
+    Unauthorized:
+      type: object
+      properties:
+        statusCode:
+          type: integer
+          example: 401
+        error:
+          type: string
+          example: Unauthorized
+    NotFound:
+      type: object
+      properties:
+        statusCode:
+          type: integer
+          example: 404
+        error:
+          type: string
+          example: Not Found
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT

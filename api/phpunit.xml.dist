@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<phpunit
+    colors="true"
+    processIsolation="false"
+    stopOnFailure="false"
+    bootstrap="tests/bootstrap.php"
+    >
+    <php>
+        <ini name="memory_limit" value="-1"/>
+        <ini name="apc.enable_cli" value="1"/>
+    </php>
+
+    <!-- Add any additional test suites you want to run here -->
+    <testsuites>
+        <testsuite name="app">
+            <directory>tests/TestCase/</directory>
+        </testsuite>
+        <testsuite name="medicamentos">
+            <file>tests/TestCase/Model/Table/MedicamentosTableTest.php</file>
+            <file>tests/TestCase/Controller/Api/MedicamentosControllerTest.php</file>
+        </testsuite>
+
+        <testsuite name="usuarios_medicamentos_status">
+            <file>tests/TestCase/Model/Table/UsuariosMedicamentosStatusTableTest.php</file>
+            <file>tests/TestCase/Controller/Api/UsuariosMedicamentosStatusControllerTest.php</file>
+        </testsuite>
+
+        <testsuite name="usuarios_medicamentos">
+            <file>tests/TestCase/Model/Table/UsuariosMedicamentosTableTest.php</file>
+            <file>tests/TestCase/Controller/Api/UsuariosMedicamentosControllerTest.php</file>
+        </testsuite>
+
+        <testsuite name="usuario_endereco">
+            <file>tests/TestCase/Model/Table/UsuarioEnderecoTableTest.php</file>
+            <file>tests/TestCase/Controller/Api/UsuarioEnderecoControllerTest.php</file>
+        </testsuite>
+
+        <testsuite name="usuario_endereco_tipo">
+            <file>tests/TestCase/Model/Table/UsuarioEnderecoTipoTableTest.php</file>
+            <file>tests/TestCase/Controller/Api/UsuarioEnderecoTipoControllerTest.php</file>
+        </testsuite>
+
+        <testsuite name="exames">
+            <file>tests/TestCase/Model/Table/ExamesTableTest.php</file>
+            <file>tests/TestCase/Controller/Api/ExamesControllerTest.php</file>
+        </testsuite>
+
+        <testsuite name="usuarios">
+            <file>tests/TestCase/Model/Table/UsuarioTableTest.php</file>
+            <file>tests/TestCase/Controller/Api/UsuarioControllerTest.php</file>
+        </testsuite>
+
+        <!-- Add plugin test suites here. -->
+    </testsuites>
+
+    <!-- Setup a listener for fixtures -->
+    <listeners>
+        <listener
+        class="\Cake\TestSuite\Fixture\FixtureInjector">
+            <arguments>
+                <object class="\Cake\TestSuite\Fixture\FixtureManager" />
+            </arguments>
+        </listener>
+    </listeners>
+
+    <!-- Ignore vendor tests in code coverage reports -->
+    <filter>
+        <whitelist>
+            <directory suffix=".php">src/</directory>
+            <directory suffix=".php">plugins/*/src/</directory>
+            <exclude>
+                <file>src/Console/Installer.php</file>
+            </exclude>
+        </whitelist>
+    </filter>
+</phpunit>

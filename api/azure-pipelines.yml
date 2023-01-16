@@ -1,0 +1,18 @@
+variables:
+- group: GitCredentialsUrlSemKeyVault
+- name: PROJECT_PATH
+  value: '/home/sistemas/rhhealth/api_rhhealth/api/'
+- name: GIT_URL
+  value: 'https://$(devOpsPipelineUserName):$(devOpsPipelineUserPasswd)@dev.azure.com/IT-HEALTH/ithealth_api/_git/ithealth_api'
+
+trigger:
+- feedback
+
+steps:
+- task: Bash@3
+  inputs:
+    filePath: '/home/sistemas/rhhealth/pipeline-devops/scripts/devops.sh'
+    arguments: '$(PROJECT_PATH) $(GIT_URL)' 
+    #gitUser vem das variaveis de grupo. 
+    
+
